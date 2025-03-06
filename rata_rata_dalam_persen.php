@@ -1,37 +1,52 @@
-<!-- 
-contoh soal :
-1. jika saya memiliki data berikut:
-januari :
- biaya penjualan = 45.667
- biaya operational = 34.546
-
- februari :
-  biaya penjualan = 34.434
-  biaya operational = 76.768
-
-maret : 
- biaya penjualan = 78.645
- biaya operational = 98.998 -->
-
 <?php
-// Data biaya operational
-$biaya_operational = array(34.546, 76.768, 98.998);
+// Sample data
+$data = [
+    'Januari' => [
+        'total_penjualan' => 67000,
+        'biaya_layanan' => 3350
+    ],
+    'Februari' => [
+        'total_penjualan' => 59500,
+        'biaya_layanan' => 3570
+    ],
+    'Maret' => [
+        'total_penjualan' => 61300,
+        'biaya_layanan' => 3065
+    ]
+];
 
-// Menghitung rata-rata
-$total_biaya = array_sum($biaya_operational);
-$jumlah_bulan = count($biaya_operational);
-$rata_rata = $total_biaya / $jumlah_bulan;
+// Calculate percentage for each month
+$persentase_per_bulan = [];
+$total_persentase = 0;
 
-// Menghitung persentase untuk setiap bulan
-$persentase = array();
-foreach ($biaya_operational as $biaya) {
-    $persentase[] = ($biaya / $total_biaya) * 100;
+foreach ($data as $bulan => $nilai) {
+    $persentase = ($nilai['biaya_layanan'] / $nilai['total_penjualan']) * 100;
+    $persentase_per_bulan[$bulan] = $persentase;
+    $total_persentase += $persentase;
 }
 
-// Menampilkan hasil
-echo "Rata-rata biaya operational: " . number_format($rata_rata, 3) . "\n";
-echo "Persentase per bulan:\n";
-echo "Januari: " . number_format($persentase[0], 2) . "%\n";
-echo "Februari: " . number_format($persentase[1], 2) . "%\n";
-echo "Maret: " . number_format($persentase[2], 2) . "%\n";
-echo "Total persentase semua bulan: " . number_format(array_sum($persentase), 2) . "%\n"; ?>
+// Calculate average percentage
+$rata_rata_persentase = $total_persentase / count($data);
+
+// Display results
+echo "Persentase biaya layanan per bulan:\n";
+foreach ($persentase_per_bulan as $bulan => $persentase) {
+    echo "$bulan: " . number_format($persentase, 2) . "%\n";
+}
+
+echo "\nRata-rata persentase biaya layanan: " 
+. number_format($rata_rata_persentase, 2) . "%\n";
+
+// Alternative calculation method (for verification)
+$total_penjualan_all = 0;
+$total_biaya_layanan_all = 0;
+
+foreach ($data as $nilai) {
+    $total_penjualan_all += $nilai['total_penjualan'];
+    $total_biaya_layanan_all += $nilai['biaya_layanan'];
+}
+
+$persentase_keseluruhan = ($total_biaya_layanan_all / $total_penjualan_all) * 100;
+echo "Persentase biaya layanan dari total keseluruhan: " 
+. number_format($persentase_keseluruhan, 2) . "%\n";
+?>
